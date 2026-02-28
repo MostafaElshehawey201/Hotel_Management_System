@@ -2,11 +2,12 @@
 
 namespace App\Repositories\Auth;
 
+use App\Interfaces\Auth\AuthLoginRepositoryInterface;
 use App\Interfaces\Auth\AuthRegisterRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class AuthRegisterRepository implements AuthRegisterRepositoryInterface
+class AuthProcessRepository implements AuthRegisterRepositoryInterface , AuthLoginRepositoryInterface
 { 
     /**
      * Create a new class instance.
@@ -29,6 +30,27 @@ class AuthRegisterRepository implements AuthRegisterRepositoryInterface
             "phone" => $authRegisterDTO->phone,
             "password" => Hash::make($authRegisterDTO->password)
         ]);
+    }
+
+    public function checkEmail($email){
+        return User::where('email' , $email)->exists();
+    }
+
+    public function emailUser($email){
+        return User::where('email' , $email)->first();
+    }
+
+    public function checkPhone($phone)
+    {
+        return User::where('phone' , $phone)->exists();
+    }
+
+    public function phoneUser($phone){
+        return User::where('phone' , $phone)->first();
+    }
+
+    public function checkPassword($authLoginDTO , $user){
+        return Hash::check($authLoginDTO->password , $user->password);
     }
     
 }
