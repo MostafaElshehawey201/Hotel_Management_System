@@ -6,15 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class apiAcceptLanguage
+class ApiAcceptLanguage
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
+        $accept_language = $request->header('accept-language');
+        if($accept_language && in_array($accept_language , ['ar' , 'en'])){
+            app()->setLocale($accept_language);
+        };
         return $next($request);
     }
 }
