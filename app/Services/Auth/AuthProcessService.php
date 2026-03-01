@@ -12,8 +12,11 @@ use App\Interfaces\Auth\AuthLoginRepositoryInterface;
 use App\Interfaces\Auth\AuthLoginServiceInterface;
 use App\Interfaces\Auth\AuthRegisterRepositoryInterface;
 use App\Interfaces\Auth\AuthRegisterServiceInterface;
+use App\Interfaces\Auth\AuthResetPasswordInterface;
+use App\Services\Manager\AuthResetPasswordStrategy;
 
-class AuthProcessService implements AuthRegisterServiceInterface, AuthLoginServiceInterface
+
+class AuthProcessService implements AuthRegisterServiceInterface, AuthLoginServiceInterface ,AuthResetPasswordInterface
 {
     /**
      * Create a new class instance.
@@ -71,6 +74,14 @@ class AuthProcessService implements AuthRegisterServiceInterface, AuthLoginServi
                 throw new PasswordErrorException(401);
             }
             return $user->createToken('authToken')->plainTextToken;
+        }
+    }
+
+    public function resetPassword($resetPasswordDTO){
+        $strategy = new AuthResetPasswordStrategy();
+        $returnStrategy = $strategy->resetPassword($resetPasswordDTO);
+        if($returnStrategy){
+            $otp = rand(100000 , 999999); 
         }
     }
 }

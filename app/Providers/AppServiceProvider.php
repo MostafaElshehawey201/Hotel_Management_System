@@ -6,6 +6,9 @@ use App\Interfaces\Auth\AuthLoginRepositoryInterface;
 use App\Interfaces\Auth\AuthLoginServiceInterface;
 use App\Interfaces\Auth\AuthRegisterRepositoryInterface;
 use App\Interfaces\Auth\AuthRegisterServiceInterface;
+use App\Interfaces\Auth\AuthResetPasswordEmailRepositoryInterface;
+use App\Interfaces\Auth\AuthResetPasswordInterface;
+use App\Interfaces\Auth\AuthResetPasswordRepositoryInterface;
 use App\Repositories\Auth\AuthProcessRepository;
 use App\Services\Auth\AuthProcessService;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +34,18 @@ class AppServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             AuthLoginRepositoryInterface::class,
+            AuthProcessRepository::class,
+        );
+        $this->app->bind(
+            AuthResetPasswordInterface::class,
+            AuthProcessService::class,
+        );
+        $this->app->bind(
+            AuthResetPasswordRepositoryInterface::class,
+            AuthProcessRepository::class,
+        );
+        $this->app->bind(
+            AuthResetPasswordEmailRepositoryInterface::class,
             AuthProcessRepository::class,
         );
     }

@@ -9,5 +9,6 @@ Route::prefix('v1')->group(function(){
     group(function(){
         Route::post('register' , 'register');
         Route::post('login' , 'login');
+        Route::post('reset-password' , 'resetPassword');
     });
 });

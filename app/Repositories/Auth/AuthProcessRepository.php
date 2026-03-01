@@ -4,10 +4,13 @@ namespace App\Repositories\Auth;
 
 use App\Interfaces\Auth\AuthLoginRepositoryInterface;
 use App\Interfaces\Auth\AuthRegisterRepositoryInterface;
+use App\Interfaces\Auth\AuthResetPasswordEmailRepositoryInterface;
+use App\Interfaces\Auth\AuthResetPasswordRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class AuthProcessRepository implements AuthRegisterRepositoryInterface , AuthLoginRepositoryInterface
+class AuthProcessRepository implements AuthRegisterRepositoryInterface , AuthLoginRepositoryInterface , AuthResetPasswordRepositoryInterface , AuthResetPasswordEmailRepositoryInterface
+
 { 
     /**
      * Create a new class instance.
@@ -52,5 +55,12 @@ class AuthProcessRepository implements AuthRegisterRepositoryInterface , AuthLog
     public function checkPassword($authLoginDTO , $user){
         return Hash::check($authLoginDTO->password , $user->password);
     }
+
+    public function resetPassword($resetPasswordDTO){
+        return User::where('phone' , $resetPasswordDTO->login['phone'])->first();
+    }
     
+    public function resetPasswordEmail($resetPasswordDTO){
+        return User::where('email' , $resetPasswordDTO->login['email'])->first();
+    }
 }

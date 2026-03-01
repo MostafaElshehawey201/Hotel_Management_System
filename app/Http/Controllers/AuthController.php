@@ -9,12 +9,15 @@ use App\Exceptions\Auth\PhoneExistsException;
 use App\Exceptions\Auth\PhoneNotFoundException;
 use App\Http\DTO\Auth\AuthLoginDTO;
 use App\Http\DTO\Auth\AuthRegisterDTO;
+use App\Http\DTO\Auth\AuthResetPasswordDTO;
 use App\Http\Requests\Auth\AuthLoginRequest;
 use App\Http\Requests\Auth\AuthRegisterRequest;
+use App\Http\Requests\Auth\AuthResetPasswordRequest;
 use App\Http\Resources\Auth\AuthLoginResource;
 use App\Http\Resources\Auth\AuthRegisterResource;
 use App\Interfaces\Auth\AuthLoginServiceInterface;
 use App\Interfaces\Auth\AuthRegisterServiceInterface;
+use App\Interfaces\Auth\AuthResetPasswordInterface;
 use App\Trait\Auth\ApiResponse;
 use Throwable;
 
@@ -24,9 +27,11 @@ class AuthController extends Controller
 {
     use ApiResponse;
 
+
     public function __construct(
         private AuthRegisterServiceInterface $auth_register_service_interface,
-        private AuthLoginServiceInterface $auth_login_service_interface
+        private AuthLoginServiceInterface $auth_login_service_interface,
+        private AuthResetPasswordInterface $auth_reset_password_interface,
     ) {}
 
     public function register(AuthRegisterRequest $authRegisterRequest)
@@ -36,7 +41,7 @@ class AuthController extends Controller
             $authRegisterDTO = new AuthRegisterDTO($validation);
             $register = $this->auth_register_service_interface->register($authRegisterDTO);
             $apiAuthRegister = new AuthRegisterResource($register);
-            return $this->success($apiAuthRegister, 201);
+            return $this->success($apiAuthRegister, 200);
         } catch (EmailExistsException $e) {
             return $this->error($e, 409);
         } catch (PhoneExistsException $e) {
@@ -63,5 +68,13 @@ class AuthController extends Controller
         } catch (Throwable $e) {
             return $this->error($e, 500);
         }
+    }
+
+
+    public function resetPassword(AuthResetPasswordRequest $authResetPasswordRequest)
+    {
+        $validation = $authResetPasswordRequest->validated();
+        $resetPasswordDTO = new AuthResetPasswordDTO($validation);
+        $this->auth_reset_password_interface->resetPassword($resetPasswordDTO);
     }
 }

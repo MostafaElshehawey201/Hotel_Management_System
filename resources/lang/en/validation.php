@@ -22,5 +22,9 @@
             "min" => "The password field must be at least 8 characters",
             "confirmed" => "The password confirmation does not match",
         ],
+        "login" => [
+            "required" => "The login field is required",
+            "string" => "The login field must be a string",
+        ]
     ]
 ?>
